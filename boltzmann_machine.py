@@ -25,7 +25,6 @@ class Boltzmann ():
 
 		self.setup()	# init weights to random values
 
-		self.P = len(self.examples)
 		self.eta = learning_rate
 		self.samples = samples
 		self.max_flips = max_flips
@@ -51,7 +50,7 @@ class Boltzmann ():
 
 	# implementation of learning
 	def learning(self):
-		for i in range (self.P):
+		for i in range (len(self.examples)):
 			for j in range (self.neurons):
 				for k in range(self.neurons):
 					self.dw[j][k] = self.eta*self.examples[i][j]*self.examples[i][k]
@@ -87,13 +86,13 @@ print ("Please enter the number of neurons")
 user_input = raw_input('--> ') # gets input from the user
 neurons = int(user_input) # parses the input to an int
 
-machine = Boltzmann(neurons, input_1, 0.01, 500, 100) # if flips is too high there is an overflow error
+machine = Boltzmann(neurons, input_2, 0.01, 500, 100) # if flips is too high there is an overflow error
 # this means the number is too much for a double
 
 for i in range (5000):
 	machine.learning()
 
-for i in range (machine.P):
+for i in range (len(machine.examples)):
 	print "Starting example %i" % i
 	print machine.net
 	print "Training the examples"
@@ -103,6 +102,6 @@ for i in range (machine.P):
 		print machine.net
 
 print "Input"
-print input_1
+print input_2
 print "Network:"
 print machine.net
