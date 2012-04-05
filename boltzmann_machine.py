@@ -1,3 +1,10 @@
+"""
+Boltzmann Machine
+Connectionist Computing Assignment 
+Student name: Hugo King-Hall
+
+"""
+
 import random
 import math
 
@@ -12,9 +19,9 @@ class Boltzmann ():
 		self.neurons = neurons
 		self.examples = examples
 
-		self.net = []
+		self.net = []	# list to store network values
 		self.weights = {} # hash to store weights for neurons
-		self.dw = {}
+		self.dw = {}	# hash to store update for weights
 
 		self.setup()	# init weights to random values
 
@@ -23,6 +30,7 @@ class Boltzmann ():
 		self.samples = samples
 		self.max_flips = max_flips
 
+	# use the weights to set the network
 	def activation(self, j):
 		z = 0
 		for i in range(self.neurons):
@@ -31,13 +39,13 @@ class Boltzmann ():
 
 		return z
 
+	# setup the lists for network, weights and dw
 	def setup(self):
 		for i in range (self.neurons):
 			self.weights[i] = [] # init with key mapping to a list
 			self.dw[i] = []
 			for x in range (self.neurons):
 				self.weights[i].append(0.2*(random.random()-0.5))
-				print self.weights
 				self.dw[i].append(0.0)
 				self.net.append(0)
 
@@ -69,6 +77,10 @@ class Boltzmann ():
 					self.dw[j][k] -= self.eta * self.neurons* self.net[j] *self.net[k] / self.samples
 
 # end of class
+
+######################################################
+#############	This is the main
+####################################################
 
 print ("Please enter the number of neurons")
 
