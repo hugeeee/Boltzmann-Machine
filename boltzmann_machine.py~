@@ -63,11 +63,11 @@ class Boltzmann ():
 					self.net[j] = -1
 				else:
 					self.net[j] = 1
-			for k in range (self.max_flips):
+			for q in range (self.max_flips):
 				for j in range(self.neurons):
 					z = self.activation(j)
-					T = 0.1*(self.max_flips - k)/ self.max_flips
-					if (1 / (1 + math.exp(-2*z/T)) < random.random()):
+					T = 0.1*(self.max_flips-q)/self.max_flips
+					if (float(1/(1+math.exp(-2*z/T))) > random.random()):
 						self.net[j] = 1
 					else:
 						self.net[j] = -1
@@ -86,7 +86,7 @@ print ("Please enter the number of neurons")
 user_input = raw_input('--> ') # gets input from the user
 neurons = int(user_input) # parses the input to an int
 
-machine = Boltzmann(neurons, input_2, 0.01, 500, 100) # if flips is too high there is an overflow error
+machine = Boltzmann(neurons, input_2, 0.01, 500, 500) # if flips is too high there is an overflow error
 # this means the number is too much for a double
 
 for i in range (5000):
@@ -102,6 +102,6 @@ for i in range (len(machine.examples)):
 		print machine.net
 
 print "Input"
-print input_1
+print input_2
 print "Network:"
 print machine.net
