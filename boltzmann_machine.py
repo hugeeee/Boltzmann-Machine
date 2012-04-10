@@ -4,26 +4,27 @@ Connectionist Computing Assignment
 Student name: Hugo King-Hall
 
 """
-
 import random
 import math
 
-input_1 = [[-1, -1, -1, -1, -1, 1], [-1, -1, 1, -1, -1, -1], [1, -1, -1, -1, -1, -1]]
-input_2 = [[-1, -1, -1, -1, 1, 1], [-1, -1, -1, -1, -1, -1],[ 1, 1, 1, 1, -1, -1]]
-input_3 = [[-1, -1, -1, -1, -1, -1, -1, -1, -1, 1],[-1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-input_4 = [[-1, -1, 1, -1, 1, -1, -1, -1, -1, 1],[-1, 1, -1, 1, 1, -1, 1, 1, 1, 1]]
+example_1 = [[-1, -1, -1, -1, -1, 1], [-1, -1, 1, -1, -1, -1], [1, -1, -1, -1, -1, -1]]
+input_1 = [[-1, -1, -1, -1, 1, 1], [-1, -1, -1, -1, -1, -1],[ 1, 1, 1, 1, -1, -1]]
+
+example_2 = [[-1, -1, -1, -1, -1, -1, -1, -1, -1, 1],[-1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+input_2 = [[-1, -1, 1, -1, 1, -1, -1, -1, -1, 1],[-1, 1, -1, 1, 1, -1, 1, 1, 1, 1]]
 
 class Boltzmann ():
 
-	def __init__(self, neurons, examples, learning_rate, samples, max_flips):
+	def __init__(self, neurons, _input, examples, learning_rate, samples, max_flips):
 		self.neurons = neurons
 		self.examples = examples
+		self.input = _input
 
 		self.net = []	# list to store network values
 		self.weights = {} # hash to store weights for neurons
 		self.dw = {}	# hash to store update for weights
 
-		self.setup()	# init weights to random values
+		self.setup()	# init weights to random values		
 
 		self.eta = learning_rate
 		self.samples = samples
@@ -54,7 +55,9 @@ class Boltzmann ():
 			for j in range (self.neurons):
 				for k in range(self.neurons):
 					self.dw[j][k] = self.eta*self.examples[i][j]*self.examples[i][k]
-
+		
+		self.dreaming()
+	
 	# implementation of dreaming
 	def dreaming(self):
 		for i in range (self.samples):
@@ -67,10 +70,12 @@ class Boltzmann ():
 				for j in range(self.neurons):
 					z = self.activation(j)
 					T = 0.1*(self.max_flips-q)/self.max_flips
-					if (float(1/(1+math.exp(-2*z/T))) > random.random()):
+					expression = 1/(1+math.exp(-2*z/T))
+					if expression > random.random():
 						self.net[j] = 1
 					else:
 						self.net[j] = -1
+						
 			for j in range (self.neurons):
 				for k in range (self.neurons):
 					self.dw[j][k] -= self.eta * self.neurons* self.net[j] *self.net[k] / self.samples
@@ -86,22 +91,20 @@ print ("Please enter the number of neurons")
 user_input = raw_input('--> ') # gets input from the user
 neurons = int(user_input) # parses the input to an int
 
-machine = Boltzmann(neurons, input_2, 0.01, 500, 150) # if flips is too high there is an overflow error
+machine = Boltzmann(neurons, input_1, example_1, 0.01, 500, 500) # if flips is too high there is an overflow error
 # this means the number is too much for a double
 
-for i in range (5000):
+output_file = open("weights.txt", "w")
+s = ""
+for i in range (250):
 	machine.learning()
 
-for i in range (len(machine.examples)):
-	print "Starting example %i" % i
-	print machine.net
-	print "Training the examples"
-	for j in range (machine.neurons):
-		machine.net = machine.examples[i]
+for i in range (5):
+	print "Run %i" %i
+	for j in range (len(machine.examples)):
+		machine.net = machine.input[j]
 		machine.dreaming()
-		print machine.net
+		print "Example is %s | Network is %s" %(str(machine.examples[j]), str(machine.net))
+		s += "\nRun ============= %i %s" %(j, str(machine.weights))
 
-print "Input"
-print input_2
-print "Network:"
-print machine.net
+output_file.write(s)
