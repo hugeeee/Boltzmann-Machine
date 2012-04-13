@@ -1,0 +1,21 @@
+Please enter the number of neurons
+--> Run 0
+Example is [-1, -1, -1, -1, -1, 1] | Network is [1, 1, 1, 1, 1, 1]
+Example is [-1, -1, 1, -1, -1, -1] | Network is [-1, 1, 1, 1, -1, 1]
+Example is [1, -1, -1, -1, -1, -1] | Network is [1, 1, 1, 1, 1, 1]
+Run 1
+Example is [-1, -1, -1, -1, -1, 1] | Network is [1, -1, -1, -1, 1, -1]
+Example is [-1, -1, 1, -1, -1, -1] | Network is [-1, -1, -1, -1, -1, -1]
+Example is [1, -1, -1, -1, -1, -1] | Network is [1, -1, -1, -1, 1, -1]
+Run 2
+Example is [-1, -1, -1, -1, -1, 1] | Network is [1, -1, -1, -1, 1, -1]
+Example is [-1, -1, 1, -1, -1, -1] | Network is [-1, 1, 1, 1, -1, 1]
+Example is [1, -1, -1, -1, -1, -1] | Network is [-1, -1, -1, -1, -1, -1]
+Run 3
+Example is [-1, -1, -1, -1, -1, 1] | Network is [1, 1, 1, 1, 1, 1]
+Example is [-1, -1, 1, -1, -1, -1] | Network is [-1, -1, -1, -1, -1, -1]
+Example is [1, -1, -1, -1, -1, -1] | Network is [-1, 1, 1, 1, -1, 1]
+Run 4
+Example is [-1, -1, -1, -1, -1, 1] | Network is [-1, 1, 1, 1, -1, 1]
+Example is [-1, -1, 1, -1, -1, -1] | Network is [1, -1, -1, -1, 1, -1]
+Example is [1, -1, -1, -1, -1, -1] | Network is [-1, 1, 1, 1, -1, 1]

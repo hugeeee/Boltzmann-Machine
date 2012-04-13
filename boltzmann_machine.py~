@@ -30,15 +30,6 @@ class Boltzmann ():
 		self.samples = samples
 		self.max_flips = max_flips
 
-	# use the weights to set the network
-	def activation(self, j):
-		z = 0
-		for i in range(self.neurons):
-			if i != j:
-				z += self.weights[j][i] * self.net[i]
-
-		return float(z)
-
 	# setup the lists for network, weights and dw
 	def setup(self):
 		for i in range (self.neurons):
@@ -48,6 +39,15 @@ class Boltzmann ():
 			for x in range (self.neurons):
 				self.weights[i].append(0.2*(random.random()-0.5))
 				self.dw[i].append(0.0)
+
+	# use the weights to set the network
+	def activation(self, j):
+		z = 0
+		for i in range(self.neurons):
+			if i != j:
+				z += self.weights[j][i] * self.net[i]
+
+		return z
 
 	# implementation of learning
 	def learning(self):
@@ -60,7 +60,7 @@ class Boltzmann ():
 	
 	# implementation of dreaming
 	def dreaming(self):
-		for i in range (self.samples):
+		for s in range (self.samples):
 			for j in range (self.neurons):
 				if (random.random() < 0.5):
 					self.net[j] = -1
@@ -70,14 +70,18 @@ class Boltzmann ():
 				for j in range(self.neurons):
 					z = self.activation(j)
 					T = 0.1*(self.max_flips-q)/self.max_flips
-					val = float(-2*(z/T))
-					val2 = float(math.exp(val))
-					expression = 1/(1+val2)
-					if expression > random.random():
-						self.net[j] = 1
-					else:
-						self.net[j] = -1
-						
+					try:
+						expression = 1/(1+math.exp(-2*z/T))
+						rand = random.random()
+						if expression > rand:
+							#print expression > rand
+							self.net[j] = 1
+						else:
+							self.net[j] = -1
+					except OverflowError: # this is a bit bad here. expression could be high but precise
+							print "OVERFLOW"
+							self.net[j] = -1
+
 			for j in range (self.neurons):
 				for k in range (self.neurons):
 					self.dw[j][k] -= self.eta * self.neurons* self.net[j] *self.net[k] / self.samples
@@ -93,12 +97,12 @@ print ("Please enter the number of neurons")
 user_input = raw_input('--> ') # gets input from the user
 neurons = int(user_input) # parses the input to an int
 
-machine = Boltzmann(neurons, input_1, example_1, 0.01, 500, 500) # if flips is too high there is an overflow error
+machine = Boltzmann(neurons, input_1, example_1, 0.02, 500, 100) # if flips is too high there is an overflow error
 # this means the number is too much for a double
 
 output_file = open("weights.txt", "w")
 s = ""
-for i in range (250):
+for i in range (500):
 	machine.learning()
 
 for i in range (5):
@@ -107,6 +111,6 @@ for i in range (5):
 		machine.net = machine.input[j]
 		machine.dreaming()
 		print "Example is %s | Network is %s" %(str(machine.examples[j]), str(machine.net))
-		s += "\nRun ============= %i %s" %(j, str(machine.weights))
+		s += "\nRun ============= %i %s" %(i, str(machine.weights))
 
 output_file.write(s)
